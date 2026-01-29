@@ -20,4 +20,5 @@ public class MyStep extends ScenarioSteps {
     public void seAccedeAlDetalleDelProcedimiento() {
         myPage.validarAccesoAlDetalle();
     }
+
 }
