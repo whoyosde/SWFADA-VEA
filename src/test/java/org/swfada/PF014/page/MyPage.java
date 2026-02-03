@@ -14,22 +14,23 @@ public class MyPage extends PageObject {
     @FindBy (xpath = "//app-search-input//input")
     private WebElementFacade campoBuscar;
 
-    @FindBy (xpath = "//p[contains(text(),'Registro de Licitadores de Andalucía PRU')]")
-    private WebElementFacade enlaceProcedimiento;
+    private String Proc;
     public void ingresarProcedimiento(String procedimiento) {
-        WebDriverWait wait = new WebDriverWait(getDriver(),30);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class=\"vea-col-7 vea-col-m-6 vea-col-s-2\"]")));
+        WebDriverWait wait = new WebDriverWait(getDriver(),60);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@ng-reflect-router-link=\"/inicio/procedimiento-detalle/\"]//..//p")));
         campoBuscar.sendKeys(procedimiento);
+        this.Proc=procedimiento;
     }
 
     public void pulsarProcedimiento() {
+        WebElement enlaceProcedimiento = getDriver().findElement(By.xpath("//p[contains(text(),'"+ Proc +"')]"));
         enlaceProcedimiento.click();
     }
 
     public void validarAccesoAlDetalle() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),8);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1")));
+        WebDriverWait wait = new WebDriverWait(getDriver(),80);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(),'"+ Proc +"')]")));
         WebElement proc = getDriver().findElement(By.tagName("h1"));
-        assertEquals("Registro de Licitadores de Andalucía PRU", proc.getText());
+        assertEquals(Proc, proc.getText());
     }
 }

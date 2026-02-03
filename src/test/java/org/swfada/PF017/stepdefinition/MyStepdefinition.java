@@ -17,13 +17,13 @@ public class MyStepdefinition {
         myStep.quePulsoSobreLaAcciónAreaPrivadaDeVentanilla();
     }
 
-    @Cuando("PF017 - me autentico con Certificado electrónico")
-    public void meAutenticoConCertificadoElectrónico() throws AWTException{
-        myStep.meAutenticoConCertificadoElectrónico();
+    @Cuando("PF017 - se autentica con Certificado electrónico")
+    public void seAutenticaConCertificadoElectrónico() throws AWTException{
+        myStep.seAutenticaConCertificadoElectrónico();
     }
 
-    @Entonces("PF017 - accedo al Area personal")
-    public void accedoAlAreaPersonal() {
-        myStep.accedoAlAreaPersonal();
+    @Entonces("PF017 - valido el acceso al Area personal")
+    public void validoElAccesoAlAreaPersonal() {
+        myStep.validoElAccesoAlAreaPersonal();
     }
 }

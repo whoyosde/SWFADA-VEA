@@ -12,7 +12,7 @@ public class MyStep extends ScenarioSteps {
     }
 
     @net.thucydides.core.annotations.Step
-    public void aceptoLosCookies() {
+    public void seAceptaLasCookies() {
         myPage.aceptarCookies();
     }
 

@@ -13,8 +13,8 @@ public class MyStepdefinition {
         myStep.queElUsuarioIngresaALaPlataformaVeaCloud();
     }
 
-    @Y("acepto los Cookies")
-    public void aceptoLosCookies() {
-        myStep.aceptoLosCookies();
+    @Y("se acepta las Cookies")
+    public void seAceptaLasCookies() {
+        myStep.seAceptaLasCookies();
     }
 }

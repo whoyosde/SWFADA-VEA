@@ -14,9 +14,9 @@ public class MyStepdefinition {
         myStep.queSeIngresaElNombreDelProcedimientoEnElCampoDeBusqueda(procedimiento);
     }
 
-    @Cuando("PF014 - pulso sobre el procedimento filtrado")
-    public void pulsoSobreElProcedimentoFiltrado() {
-        myStep.pulsoSobreElProcedimentoFiltrado();
+    @Cuando("PF014 - se pulsa sobre el procedimiento filtrado")
+    public void sePulsaSobreElProcedimientoFiltrado() {
+        myStep.sePulsaSobreElProcedimientoFiltrado();
     }
 
     @Entonces("PF014 - se accede al detalle del procedimiento")

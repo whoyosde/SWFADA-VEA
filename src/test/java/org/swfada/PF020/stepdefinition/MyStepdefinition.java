@@ -17,23 +17,23 @@ public class MyStepdefinition {
         myStep.queSeIngresaElNombreDelProcedimientoEnElCampoDeBusqueda(procedimiento);
     }
 
-    @Cuando("PF020 - pulso sobre el procedimento filtrado")
-    public void pulsoSobreElProcedimentoFiltrado() {
-        myStep.pulsoSobreElProcedimentoFiltrado();
+    @Cuando("PF020 - se pulsa sobre el procedimiento filtrado")
+    public void sePulsaSobreElProcedimentoFiltrado() {
+        myStep.sePulsaSobreElProcedimentoFiltrado();
     }
 
-    @Y("PF020 - pulso sobre el botón Iniciar solicitud")
-    public void pulsoSobreElBotónIniciarSolicitud() {
-        myStep.pulsoSobreElBotónIniciarSolicitud();
+    @Y("PF020 - se pulsa sobre el botón Iniciar solicitud")
+    public void sePulsaSobreElBotónIniciarSolicitud() {
+        myStep.sePulsaSobreElBotónIniciarSolicitud();
     }
 
-    @Y("PF020 - me autentico con Certificado electrónico")
-    public void meAutenticoConCertificadoElectrónico() throws AWTException {
-        myStep.meAutenticoConCertificadoElectrónico();
+    @Y("PF020 - se autentica con Certificado electrónico")
+    public void seAutenticaConCertificadoElectrónico() throws AWTException {
+        myStep.seAutenticaConCertificadoElectrónico();
     }
 
-    @Entonces("PF020 - se accede al borrador del procedimiento")
-    public void seAccedeAlBorradorDelProcedimiento() {
-        myStep.seAccedeAlBorradorDelProcedimiento();
+    @Entonces("PF020 - se valida el acceso al borrador del procedimiento")
+    public void seValidaElAccesoAlBorradorDelProcedimiento() {
+        myStep.seValidaElAccesoAlBorradorDelProcedimiento();
     }
 }

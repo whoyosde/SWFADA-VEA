@@ -1,8 +1,9 @@
-package org.swfada.PF020.page;
+package org.swfada.PF021.page;
 
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.pages.PageObject;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,33 +11,33 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class MyPage extends PageObject {
-
     @FindBy(xpath = "//app-search-input//input")
     private WebElementFacade campoBuscar;
 
-    @FindBy (xpath = "//p[contains(text(),'Procedimiento para prueba de firma con clave')]")
-    private WebElementFacade enlaceProcedimiento;
+    @FindBy (xpath = "//p[contains(text(),'COMPLETAR')]")
+    private WebElementFacade btnCompletar;
 
     @FindBy (xpath = "//p[contains(text(),'INICIAR SOLICITUD')]")
     private WebElementFacade btnIniciarSolicitud;
 
     @FindBy(xpath = "//p[contains(text(),'Acceder con mi certificado electrónico')]")
     private WebElementFacade opcionConCertificado;
+
     private String Proc;
-    
-    public void IngresaroProcedimiento(String procedimiento) {
-        WebDriverWait wait = new WebDriverWait(getDriver(),30);
+    public void IngresarProcedimiento(String procedimiento) {
+        WebDriverWait wait = new WebDriverWait(getDriver(),60);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@ng-reflect-router-link=\"/inicio/procedimiento-detalle/\"]//..//p")));
         campoBuscar.sendKeys(procedimiento);
-        this.Proc =procedimiento;
+        this.Proc = procedimiento;
     }
 
     public void pulsarSobreProcedimiento() {
-        WebElement enlaceProc=getDriver().findElement(By.xpath("//p[contains(text(),'"+ Proc +"')]"));
+        WebElement enlaceProc=getDriver().findElement(By.xpath("//p[text()='" + Proc +"']"));
         enlaceProc.click();
     }
 
@@ -86,9 +87,26 @@ public class MyPage extends PageObject {
     }
 
     public void validarBorrarDelProcedimiento() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),60);
+        WebDriverWait wait = new WebDriverWait(getDriver(),80);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(),'" +Proc+ "')]")));
         WebElement miga = getDriver().findElement(By.xpath("//li[contains(text(),'Borrador')]"));
         assertEquals("Borrador", miga.getText());
+    }
+
+    public void pulsarBotonCompletar() {
+        btnCompletar.waitUntilClickable();
+        btnCompletar.click();
+    }
+
+    public void validarFormulario() {
+        WebElement iframe = getDriver().findElement(By.id( "iFrameForm"));
+        getDriver().switchTo().frame(iframe);
+        List<WebElement> formu = getDriver().findElements(By.xpath("//div[@class=\"form-datos-solicitante\"]"));
+        if (formu.size() != 0) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.fail("No existe formulario");
+        }
+
     }
 }

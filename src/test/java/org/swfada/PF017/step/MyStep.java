@@ -14,12 +14,12 @@ public class MyStep extends ScenarioSteps {
     }
 
     @net.thucydides.core.annotations.Step
-    public void meAutenticoConCertificadoElectrónico() throws AWTException{
+    public void seAutenticaConCertificadoElectrónico() throws AWTException{
         myPage.autenticaciónConCertificadoElectronico();
     }
 
     @net.thucydides.core.annotations.Step
-    public void accedoAlAreaPersonal() {
+    public void validoElAccesoAlAreaPersonal() {
         myPage.validarAccesoAlAreaPersonal();
     }
 

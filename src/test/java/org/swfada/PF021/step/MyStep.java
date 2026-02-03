@@ -1,7 +1,7 @@
-package org.swfada.PF020.step;
+package org.swfada.PF021.step;
 
 import net.thucydides.core.steps.ScenarioSteps;
-import org.swfada.PF020.page.MyPage;
+import org.swfada.PF021.page.MyPage;
 
 import java.awt.*;
 
@@ -10,11 +10,11 @@ public class MyStep extends ScenarioSteps {
 
     @net.thucydides.core.annotations.Step
     public void queSeIngresaElNombreDelProcedimientoEnElCampoDeBusqueda(String procedimiento) {
-        myPage.IngresaroProcedimiento(procedimiento);
+        myPage.IngresarProcedimiento(procedimiento);
     }
 
     @net.thucydides.core.annotations.Step
-    public void sePulsaSobreElProcedimentoFiltrado() {
+    public void sePulsaSobreElProcedimientoFiltrado() {
         myPage.pulsarSobreProcedimiento();
     }
 
@@ -24,12 +24,22 @@ public class MyStep extends ScenarioSteps {
     }
 
     @net.thucydides.core.annotations.Step
-    public void seAutenticaConCertificadoElectrónico()throws AWTException {
+    public void seAutenticaConCertificadoElectrónico() throws AWTException {
         myPage.autenticaciónConCertificado();
     }
 
     @net.thucydides.core.annotations.Step
     public void seValidaElAccesoAlBorradorDelProcedimiento() {
         myPage.validarBorrarDelProcedimiento();
+    }
+
+    @net.thucydides.core.annotations.Step
+    public void sePulsaSobreElBotónCompletarDelFormulario() {
+        myPage.pulsarBotonCompletar();
+    }
+
+    @net.thucydides.core.annotations.Step
+    public void seValidaQueElFormularioSeAbreCorrectamente() {
+        myPage.validarFormulario();
     }
 }

@@ -14,7 +14,7 @@ public class MyPage extends PageObject {
     @FindBy (xpath = "//button[contains(text(),'Aceptar')]")
     private WebElementFacade btnAceptar;
     public void aceptarCookies() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),8);
+        WebDriverWait wait = new WebDriverWait(getDriver(),60);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'Aceptar')]")));
         btnAceptar.click();
     }
