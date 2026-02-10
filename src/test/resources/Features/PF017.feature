@@ -7,7 +7,7 @@ Característica: PF017 - Acceso con certificado digital de persona física al á
 
   Antecedentes:
     Dado que el usuario ingresa a la plataforma Vea Cloud
-    Y se acepta las Cookies
+    Cuando se acepta las Cookies
 
   Escenario: Acceso con certificado digital de persona física al área privada de ventanilla
     Dado PF017 - que pulso sobre la acción Area privada de ventanilla

@@ -8,14 +8,15 @@ Característica: : PF023 - Validar la presentación de la "Presentación electr�
   Antecedentes:
     Dado que el usuario ingresa a la plataforma Vea Cloud
     Y se acepta las Cookies
+    Y se ingresa el nombre del procedimiento en el campo de busqueda
+      | Presentación electrónica general |
+    Y se pulsa sobre el procedimiento filtrado
+    Y se pulsa sobre el botón Iniciar solicitud
+    Y se autentica con Certificado electrónico
     
-    Esquema del escenario: Validar la presentación de la "Presentación electrónica general" con certificado de persona física
-      Dado PF023 - que se ingresa el nombre del procedimiento en el campo de busqueda "<procedimiento>"
-      Cuando PF023 - se pulsa sobre el procedimiento filtrado
-      Y PF023 - se pulsa sobre el botón Iniciar solicitud
-      Y PF023 - se autentica con Certificado electrónico
-      Entonces PF023 - se accede al borrador del procedimiento
-      Cuando PF023 - se pulsa sobre el botón Completar del formulario
+    Escenario: Validar la presentación de la "Presentación electrónica general" con certificado de persona física
+      Cuando PF023 - se accede al borrador del procedimiento
+      Y PF023 - se pulsa sobre el botón Completar del formulario
       Y PF023 - se cumplimenta el formulario
       Y PF023 - se pulsa el botón Guardar y cerrar
       Y PF023 - se pulsa el botón Firmar documentos
@@ -23,7 +24,5 @@ Característica: : PF023 - Validar la presentación de la "Presentación electr�
       Y PF023 - se firman los documentos
       Y PF023 - se pulsa el botón Presentar solicitud
       Entonces PF023 - se valida que la solicitud se presento correctamente
-      Ejemplos:
-        | procedimiento                    |
-        | Presentación electrónica general |
+
       

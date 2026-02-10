@@ -8,25 +8,6 @@ import java.awt.*;
 public class MyStep extends ScenarioSteps {
     private MyPage myPage;
 
-    @net.thucydides.core.annotations.Step
-    public void queSeIngresaElNombreDelProcedimientoEnElCampoDeBusqueda(String procedimiento) {
-        myPage.IngresarProcedimiento(procedimiento);
-    }
-
-    @net.thucydides.core.annotations.Step
-    public void sePulsaSobreElProcedimientoFiltrado() {
-        myPage.pulsarSobreProcedimiento();
-    }
-
-    @net.thucydides.core.annotations.Step
-    public void sePulsaSobreElBotónIniciarSolicitud() {
-        myPage.pulsarIniciarSolicitud();
-    }
-
-    @net.thucydides.core.annotations.Step
-    public void seAutenticaConCertificadoElectrónico()throws AWTException {
-        myPage.autenticaciónConCertificado();
-    }
 
     @net.thucydides.core.annotations.Step
     public void seAccedeAlBorradorDelProcedimiento() {

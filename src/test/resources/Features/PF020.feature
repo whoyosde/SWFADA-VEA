@@ -8,15 +8,15 @@ Característica: PF020 - Acceso con certificado de persona física e inicio de s
   Antecedentes:
     Dado que el usuario ingresa a la plataforma Vea Cloud
     Y se acepta las Cookies
-
-  Esquema del escenario: Acceso con certificado de persona física e inicio de solicitud
-    Dado PF020 - que se ingresa el nombre del procedimiento en el campo de busqueda "<procedimiento>"
-    Cuando PF020 - se pulsa sobre el procedimiento filtrado
-    Y PF020 - se pulsa sobre el botón Iniciar solicitud
-    Y PF020 - se autentica con Certificado electrónico
-    Entonces PF020 - se valida el acceso al borrador del procedimiento
-    Ejemplos:
-      | procedimiento                                |
+    Y se ingresa el nombre del procedimiento en el campo de busqueda
       | Procedimiento para prueba de firma con clave |
+    Y se pulsa sobre el procedimiento filtrado
+    Y se pulsa sobre el botón Iniciar solicitud
+    Y se autentica con Certificado electrónico
+
+  Escenario: Acceso con certificado de persona física e inicio de solicitud
+    Entonces PF020 - se valida el acceso al borrador del procedimiento
+
+
 
 

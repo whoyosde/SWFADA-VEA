@@ -7,7 +7,7 @@ Característica: PF014 - Acceder a procedimiento desde búsqueda de procedimient
 
   Antecedentes:
     Dado que el usuario ingresa a la plataforma Vea Cloud
-    Y se acepta las Cookies
+    Cuando se acepta las Cookies
 
   Esquema del escenario: Acceder a procedimiento desde búsqueda de procedimientos predictiva
     Dado PF014 - que se ingresa el nombre del procedimiento en el campo de busqueda "<procedimiento>"

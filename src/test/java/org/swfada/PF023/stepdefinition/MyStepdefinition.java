@@ -12,32 +12,13 @@ import java.awt.*;
 public class MyStepdefinition {
     @Steps
     private MyStep myStep;
-    @Dado("PF023 - que se ingresa el nombre del procedimiento en el campo de busqueda {string}")
-    public void queSeIngresaElNombreDelProcedimientoEnElCampoDeBusqueda(String procedimiento) {
-        myStep.queSeIngresaElNombreDelProcedimientoEnElCampoDeBusqueda(procedimiento);
-    }
 
-    @Cuando("PF023 - se pulsa sobre el procedimiento filtrado")
-    public void sePulsaSobreElProcedimientoFiltrado() {
-        myStep.sePulsaSobreElProcedimientoFiltrado();
-    }
-
-    @Y("PF023 - se pulsa sobre el botón Iniciar solicitud")
-    public void sePulsaSobreElBotónIniciarSolicitud() {
-        myStep.sePulsaSobreElBotónIniciarSolicitud();
-    }
-
-    @Y("PF023 - se autentica con Certificado electrónico")
-    public void seAutenticaConCertificadoElectrónico()throws AWTException {
-        myStep.seAutenticaConCertificadoElectrónico();
-    }
-
-    @Entonces("PF023 - se accede al borrador del procedimiento")
+    @Cuando("PF023 - se accede al borrador del procedimiento")
     public void seAccedeAlBorradorDelProcedimiento() {
         myStep.seAccedeAlBorradorDelProcedimiento();
     }
 
-    @Cuando("PF023 - se pulsa sobre el botón Completar del formulario")
+    @Y("PF023 - se pulsa sobre el botón Completar del formulario")
     public void sePulsaSobreElBotónCompletarDelFormulario() {
         myStep.sePulsaSobreElBotónCompletarDelFormulario();
     }
