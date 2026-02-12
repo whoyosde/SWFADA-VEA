@@ -3,7 +3,7 @@
 Característica: PF027 - Incorporar documento obligatorio en formato físico con extensión no permitida
   Como usuario registrado en el sistema
   Quiero ingresar a la plataforma Vea Cloud
-  Para incorporar documento inválido
+  Para incorporar documento obligatorio inválido
 
   Antecedentes:
     Dado que el usuario ingresa a la plataforma Vea Cloud

@@ -1,4 +1,4 @@
-package org.swfada.PF026.page;
+package org.swfada.PF039.page;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.pages.WebElementFacade;
@@ -20,11 +20,26 @@ public class MyPage extends PageObject {
     @FindBy(xpath = "(//p[contains(text(),'PORTAR')])[1]")
     private WebElementFacade btnAportar;
 
-    @FindBy(xpath = "//span[contains(text(),'Subir desde mi equipo')]")
+    @FindBy(xpath = "//span[contains(text(),'Indicar documentación que ya tiene la administración')]")
     private WebElementFacade opcionSubir;
 
-    @FindBy(xpath = "(//p[contains(text(),'ACEPTAR')])[1]")
+    @FindBy(xpath = "(//p[contains(text(),'ACEPTAR')])[2]")
     private WebElementFacade btnAceptar;
+
+    @FindBy(id = "documento")
+    private WebElementFacade campoDocumento;
+
+    @FindBy(id = "procedimiento")
+    private WebElementFacade campoProcedimiento;
+
+    @FindBy(id = "fechaPresentacion")
+    private WebElementFacade campoFecha;
+
+    @FindBy(id = "consejeria")
+    private WebElementFacade campoConsejeria;
+
+    @FindBy(id = "descripcion")
+    private WebElementFacade campoDescripcion;
 
     public void validarBorrarDelProcedimiento() {
         String proc = Serenity.sessionVariableCalled("PROC");
@@ -41,37 +56,30 @@ public class MyPage extends PageObject {
         btnAportar.click();
     }
 
-    public void seleccionarSubirDesdeMiEquipo() {
+    public void seleccionarIndicarDocumentaciónQueYaTieneLaAdministración() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id=\"cdk-overlay-0\"]")));
+        opcionSubir.waitUntilClickable();
         opcionSubir.click();
     }
 
-    public void adjuntarDocumento() {
+    public void rellenarCamposObligatorios(String documento, String procedimiento, String fecha, String consejeria) {
         WebDriverWait wait = new WebDriverWait(getDriver(), 30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(),'Adjuntar documento')]")));
-
-        String relativePath = "src/test/resources/DOC0234.pdf";
-        String absolutePath = Paths.get(relativePath).toAbsolutePath().toString();
-
-        // Localizar el elemento de entrada de archivo
-        WebElement fileInput = getDriver().findElement(By.xpath("//input[@name=\"fileupload\"]"));
-
-        // Adjuntar el archivo
-        fileInput.sendKeys(absolutePath);
-
-        System.out.println("Archivo adjuntado correctamente.");
+        campoDocumento.sendKeys(documento);
+        campoProcedimiento.sendKeys(procedimiento);
+        campoFecha.sendKeys(fecha);
+        campoConsejeria.sendKeys(consejeria);
     }
 
     public void pulsarBotonAceptar() {
-        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'DOC0234.pdf')]")));
+        btnAceptar.waitUntilClickable();
         btnAceptar.click();
     }
 
     public void validarDocumentoIncorporado() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 80);
-        WebElement btnModificar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'MODIFICAR')]")));
+        WebElement btnModificar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'AUTORIZADO')]")));
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnModificar);
@@ -79,10 +87,12 @@ public class MyPage extends PageObject {
         WebElement etiqueta = getDriver().findElement(By.xpath("(//section[contains(@class,'vea-row')]//span[contains(@class,'ng-star-inserted')])[2]"));
         assertEquals("El estado del documento no es correcto", "Incorporado", etiqueta.getText().trim());
 
-        boolean iconoDescargarPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faDownload']")).isEmpty();
-        assertTrue("El icono de Descargar no está presente",iconoDescargarPresente);
+        boolean iconoAutorizadoPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faCertificate']")).isEmpty();
+        assertTrue("El icono de Descargar no está presente", iconoAutorizadoPresente);
 
         boolean iconoEliminarPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faTrash']")).isEmpty();
-        assertTrue("El icono de Eliminar no está presente",iconoEliminarPresente);
+        assertTrue("El icono de Eliminar no está presente", iconoEliminarPresente);
     }
+
+
 }

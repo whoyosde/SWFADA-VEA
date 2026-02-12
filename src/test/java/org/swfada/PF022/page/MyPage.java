@@ -141,5 +141,7 @@ public class MyPage extends PageObject {
     public void validarFormularioGuardado() {
         WebElement btnformulario = getDriver().findElement(By.xpath("(//button/div[@class=\"vea-mx-auto\"]//p)[1]"));
         assertEquals("MODIFICAR", btnformulario.getText());
+        WebElement etiqueta = getDriver().findElement(By.xpath("(//section[contains(@class,'vea-row')]//span[contains(@class,'ng-star-inserted')])[1]"));
+        assertEquals("El estado del documento no es correcto", "Correcto", etiqueta.getText().trim());
     }
 }
