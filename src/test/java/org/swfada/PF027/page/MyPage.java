@@ -42,7 +42,7 @@ public class MyPage extends PageObject {
 
     public void seleccionarSubirDesdeMiEquipo() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id=\"cdk-overlay-0\"]")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role=\"menu\"]")));
         opcionSubir.click();
     }
 

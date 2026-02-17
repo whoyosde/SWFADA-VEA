@@ -65,9 +65,6 @@ public class MyPage extends PageObject {
         System.out.println("Archivo adjuntado correctamente.");
     }
 
-    public void ingresarDescripcion() {
-        campoDescrip.sendKeys("Doc Prueba");
-    }
     public void pulsarBotonAceptar() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'DOCX.docx')]")));

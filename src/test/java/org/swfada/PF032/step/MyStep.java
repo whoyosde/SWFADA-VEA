@@ -27,11 +27,6 @@ public class MyStep extends ScenarioSteps {
     }
 
     @net.thucydides.core.annotations.Step
-    public void seIngresaLaDescripción() {
-        myPage.ingresarDescripcion();
-    }
-
-    @net.thucydides.core.annotations.Step
     public void sePulsaSobreElBotónAceptar() {
         myPage.pulsarBotonAceptar();
     }

@@ -1,9 +1,8 @@
-package org.swfada.PF047.page;
+package org.swfada.PF056.page;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.pages.PageObject;
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -12,11 +11,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -74,35 +71,26 @@ public class MyPage extends PageObject {
     @FindBy(xpath = "(//p[contains(text(),'PORTAR')])[1]")
     private WebElementFacade btnAportar;
 
-    @FindBy(xpath = "//span[contains(text(),'Indicar documentación que ya tiene la administración')]")
+    @FindBy(xpath = "//span[contains(text(),'Subir desde mi equipo')]")
     private WebElementFacade opcionSubir;
 
-    @FindBy(xpath = "(//p[contains(text(),'ACEPTAR')])[2]")
+    @FindBy(xpath = "(//p[contains(text(),'ACEPTAR')])[1]")
     private WebElementFacade btnAceptar;
-
-    @FindBy(id = "documento")
-    private WebElementFacade campoDocumento;
-
-    @FindBy(id = "procedimiento")
-    private WebElementFacade campoProcedimiento;
-
-    @FindBy(id = "fechaPresentacion")
-    private WebElementFacade campoFecha;
-
-    @FindBy(id = "consejeria")
-    private WebElementFacade campoConsejeria;
-
-    @FindBy(id = "descripcion")
-    private WebElementFacade campoDescripcion;
 
     @FindBy(xpath = "//p[contains(text(),'FIRMAR DOCUMENTOS')]")
     private WebElementFacade btnFirmar;
 
-    @FindBy(xpath = "//label[@for=\"Autorización\"]")
-    private WebElementFacade selecDocumentoAuto;
+    @FindBy(xpath = "//label[@for=\"Documento anexo\"]")
+    private WebElementFacade selecDocumentoAnexo;
 
     @FindBy(xpath = "//button[contains(text(),'Firmar documentos')]")
     private WebElementFacade btnFirmarDocumentos;
+
+    @FindBy(xpath = "//fa-icon[@alt=\"faTrash\"]")
+    private WebElementFacade iconoEliminar;
+
+    @FindBy(xpath = "//button[contains(text(),'Borrar')]")
+    private WebElementFacade btnBorrar;
 
 
     public void validarBorrarDelProcedimiento() {
@@ -186,39 +174,48 @@ public class MyPage extends PageObject {
         btnAportar.click();
     }
 
-    public void seleccionarIndicarDocumentaciónQueYaTieneLaAdministración() {
+    public void seleccionarSubirDesdeMiEquipo() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role=\"menu\"]")));
-        opcionSubir.waitUntilClickable();
         opcionSubir.click();
     }
 
-    public void rellenarCamposObligatorios(String documento, String procedimiento, String fecha, String consejeria) {
+    public void adjuntarDocumento() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(),'Adjuntar documento')]")));
-        campoDocumento.sendKeys(documento);
-        campoProcedimiento.sendKeys(procedimiento);
-        campoFecha.sendKeys(fecha);
-        campoConsejeria.sendKeys(consejeria);
+
+        String relativePath = "src/test/resources/DOC0234.pdf";
+        String absolutePath = Paths.get(relativePath).toAbsolutePath().toString();
+
+        // Localizar el elemento de entrada de archivo
+        WebElement fileInput = getDriver().findElement(By.xpath("//input[@name=\"fileupload\"]"));
+
+        // Adjuntar el archivo
+        fileInput.sendKeys(absolutePath);
+
+        System.out.println("Archivo adjuntado correctamente.");
     }
 
     public void pulsarBotonAceptar() {
-        btnAceptar.waitUntilClickable();
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'DOC0234.pdf')]")));
         btnAceptar.click();
     }
 
     public void validarDocumentoIncorporado() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 80);
-        WebElement btnAutorizado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'AUTORIZADO')]")));
-
+        WebElement btnModificar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h5[contains(text(),'Documento anexo')]//..//p[contains(text(),'MODIFICAR')]")));
+        By estadoDoc = By.xpath("//h5[contains(text(),'Documento anexo')]//..//p[contains(text(),'APORTAR')]");
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(estadoDoc));
+        
         JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
-        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnAutorizado);
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnModificar);
 
         WebElement etiqueta = getDriver().findElement(By.xpath("(//section[contains(@class,'vea-row')]//span[contains(@class,'ng-star-inserted')])[2]"));
         assertEquals("El estado del documento no es correcto", "Incorporado", etiqueta.getText().trim());
 
-        boolean iconoAutorizadoPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faCertificate']")).isEmpty();
-        assertTrue("El icono de Descargar no está presente", iconoAutorizadoPresente);
+        boolean iconoDescargarPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faDownload']")).isEmpty();
+        assertTrue("El icono de Descargar no está presente", iconoDescargarPresente);
 
         boolean iconoEliminarPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faTrash']")).isEmpty();
         assertTrue("El icono de Eliminar no está presente", iconoEliminarPresente);
@@ -232,8 +229,8 @@ public class MyPage extends PageObject {
     public void seleccionarDocumentoAFirmar() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'Solicitud')]")));
-        selecDocumentoAuto.waitUntilClickable();
-        selecDocumentoAuto.click();
+        selecDocumentoAnexo.waitUntilClickable();
+        selecDocumentoAnexo.click();
     }
 
     public void firmarDocumentos() throws AWTException {
@@ -287,5 +284,33 @@ public class MyPage extends PageObject {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", etiquetaFirma);
         assertEquals("El estado del documento no es correcto", "Firmado", etiquetaFirma.getText().trim());
+    }
+
+    public void pulsarEliminarDocumento() {
+        iconoEliminar.waitUntilClickable();
+        iconoEliminar.click();
+    }
+
+    public void pulsarBotónBorrar() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(),'Borrar documentos')]")));
+        btnBorrar.waitUntilClickable();
+        btnBorrar.click();
+    }
+
+    public void validarDocumentoEliminado() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 80);
+
+        By botonAportarDoc = By.xpath("//h5[contains(text(),'Documento anexo')]//..//p[contains(text(),'APORTAR')]");
+        By estadoFirmado = By.xpath("//div[contains(@class,'boton-firmado')]//span[contains(text(),'Firmado')]");
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(estadoFirmado));
+
+        WebElement botonAportar = wait.until(ExpectedConditions.visibilityOfElementLocated(botonAportarDoc));
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", botonAportar);
+
+        assertTrue("El botón APORTAR no se muestra después de eliminar el documento", botonAportar.isDisplayed());
+
     }
 }

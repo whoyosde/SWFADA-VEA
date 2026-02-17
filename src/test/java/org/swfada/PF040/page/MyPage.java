@@ -134,7 +134,7 @@ public class MyPage extends PageObject {
         waitFor(4).second();
 
         // Paso 1: Obtener la ruta absoluta del archivo a descargar
-        String absolutePath = Paths.get(relativePath + "autorización.pdf").toAbsolutePath().toString();
+        String absolutePath = Paths.get(relativePath + "autorizacion.pdf").toAbsolutePath().toString();
         StringSelection stringSelection = new StringSelection(absolutePath);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, stringSelection);
@@ -171,7 +171,7 @@ public class MyPage extends PageObject {
         File dir = new File(relativePath);
 
         // Paso 2: Definir el nombre esperado del archivo descargado
-        String nombreArchivoEsperado = "autorización.pdf";
+        String nombreArchivoEsperado = "autorizacion.pdf";
 
         // Paso 3: Esperar dinámicamente a que el archivo aparezca en el directorio
         boolean archivoDescargado = esperarArchivoDescargado(dir, nombreArchivoEsperado, 30); // Esperar hasta 30 segundos

@@ -19,52 +19,52 @@ import static org.junit.Assert.assertTrue;
 
 public class MyPage extends PageObject {
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//p[contains(text(),'COMPLETAR')]")
+    @FindBy(xpath = "//p[contains(text(),'COMPLETAR')]")
     private WebElementFacade btnCompletar;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//ng-select[@id=\"sexo\"]")
+    @FindBy(xpath = "//ng-select[@id=\"sexo\"]")
     private WebElementFacade selectSexo;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//ng-select[@id=\"tipoVia\"]")
+    @FindBy(xpath = "//ng-select[@id=\"tipoVia\"]")
     private WebElementFacade selectTipo;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//input[@id=\"nombreViaSoli\"]")
+    @FindBy(xpath = "//input[@id=\"nombreViaSoli\"]")
     private WebElementFacade nombreTipo;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//input[@id=\"numero\"]")
+    @FindBy(xpath = "//input[@id=\"numero\"]")
     private WebElementFacade campoNumero;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//ng-select[@id=\"provincia\"]")
+    @FindBy(xpath = "//ng-select[@id=\"provincia\"]")
     private WebElementFacade selectProvincia;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//ng-select[@id=\"municipio\"]")
+    @FindBy(xpath = "//ng-select[@id=\"municipio\"]")
     private WebElementFacade selectMunicipio;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//input[@id=\"cod\"]")
+    @FindBy(xpath = "//input[@id=\"cod\"]")
     private WebElementFacade campoCP;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//input[@id=\"numeroMovil\"]")
+    @FindBy(xpath = "//input[@id=\"numeroMovil\"]")
     private WebElementFacade campoCelular;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//input[@id=\"correo\"]")
+    @FindBy(xpath = "//input[@id=\"correo\"]")
     private WebElementFacade campoCorreo;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//ng-select[@id=\"selectConsejerias\"]")
+    @FindBy(xpath = "//ng-select[@id=\"selectConsejerias\"]")
     private WebElementFacade selectConsejeria;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//ng-select[@id=\"organo\"]")
+    @FindBy(xpath = "//ng-select[@id=\"organo\"]")
     private WebElementFacade selectOrgano;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//textarea[@id=\"expone\"]")
+    @FindBy(xpath = "//textarea[@id=\"expone\"]")
     private WebElementFacade campoExpone;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//textarea[@id=\"solicita\"]")
+    @FindBy(xpath = "//textarea[@id=\"solicita\"]")
     private WebElementFacade campoSolicita;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(xpath = "//input[@id=\"lugarFirma\"]")
+    @FindBy(xpath = "//input[@id=\"lugarFirma\"]")
     private WebElementFacade campoLugar;
 
-    @net.serenitybdd.core.annotations.findby.FindBy(id = "btnEnviarFormPeg")
+    @FindBy(id = "btnEnviarFormPeg")
     private WebElementFacade btnGuardar;
 
     @FindBy(xpath = "(//p[contains(text(),'PORTAR')])[1]")
@@ -233,7 +233,7 @@ public class MyPage extends PageObject {
 
     public void seleccionarDocumentoAFirmar() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 30);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(),'Firmar documentos')]")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'Solicitud')]")));
         selecDocumentoAuto.waitUntilClickable();
         selecDocumentoAuto.click();
     }

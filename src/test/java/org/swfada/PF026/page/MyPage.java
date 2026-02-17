@@ -43,7 +43,7 @@ public class MyPage extends PageObject {
 
     public void seleccionarSubirDesdeMiEquipo() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 10);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id=\"cdk-overlay-0\"]")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@role=\"menu\"]")));
         opcionSubir.click();
     }
 
@@ -71,7 +71,9 @@ public class MyPage extends PageObject {
 
     public void validarDocumentoIncorporado() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 80);
-        WebElement btnModificar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'MODIFICAR')]")));
+        WebElement btnModificar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h5[contains(text(),'Documento anexo')]//..//p[contains(text(),'MODIFICAR')]")));
+        By estadoDoc = By.xpath("//h5[contains(text(),'Documento anexo')]//..//p[contains(text(),'APORTAR')]");
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(estadoDoc));
 
         JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnModificar);

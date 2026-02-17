@@ -29,11 +29,6 @@ public class MyStepdefinition {
         myStep.seAdjuntaElDocumento();
     }
 
-    @Y("PF032 - se ingresa la descripción")
-    public void seIngresaLaDescripción() {
-        myStep.seIngresaLaDescripción();
-    }
-
     @Y("PF032 - se pulsa sobre el botón Aceptar")
     public void sePulsaSobreElBotónAceptar() {
         myStep.sePulsaSobreElBotónAceptar();

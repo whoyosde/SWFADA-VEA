@@ -66,10 +66,6 @@ public class MyPage extends PageObject {
     }
 
 
-    public void ingresarDescripcion() {
-        campoDescrip.sendKeys("Doc Prueba");
-    }
-
     public void pulsarBotonAceptar() {
         WebDriverWait wait = new WebDriverWait(getDriver(), 30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(),'DOC0234.pdf')]")));
@@ -83,7 +79,7 @@ public class MyPage extends PageObject {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnModificar);
 
-        WebElement etiqueta = getDriver().findElement(By.xpath("(//section[contains(@class,'vea-row')]//span[contains(@class,'ng-star-inserted')])[3]"));
+        WebElement etiqueta = getDriver().findElement(By.xpath("//div[@class=\"vea-col-12 vea-d-flex vea-justify-flex-end vea-p-0 vea-pb-0 divBotonesDocumentacion\"]/div[@class=\"ng-star-inserted\"]/..//parent::div//span"));
         assertEquals("El estado del documento no es correcto", "Incorporado", etiqueta.getText().trim());
 
         boolean iconoDescargarPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faDownload']")).isEmpty();
