@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
         stepNotifications = true,
         features = "src/test/resources/Features",
         glue = "org.swfada",
-        tags ="@PF032 or @PF039"
+        tags ="@PF048"
 
 )
 

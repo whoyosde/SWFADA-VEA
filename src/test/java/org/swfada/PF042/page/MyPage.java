@@ -1,4 +1,4 @@
-package org.swfada.PF039.page;
+package org.swfada.PF042.page;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.pages.WebElementFacade;
@@ -10,7 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -40,6 +40,9 @@ public class MyPage extends PageObject {
 
     @FindBy(id = "descripcion")
     private WebElementFacade campoDescripcion;
+
+    @FindBy(xpath = "//p[contains(text(),'AUTORIZACIÓN')]")
+    private List<WebElementFacade> Autorizacion;
 
     public void validarBorrarDelProcedimiento() {
         String proc = Serenity.sessionVariableCalled("PROC");
@@ -92,6 +95,44 @@ public class MyPage extends PageObject {
 
         boolean iconoEliminarPresente = !getDriver().findElements(By.xpath("//fa-icon[@alt='faTrash']")).isEmpty();
         assertTrue("El icono de Eliminar no está presente", iconoEliminarPresente);
+    }
+
+
+    public void pulsarBotonAportarOpcional() {
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnAportar);
+        btnAportar.waitUntilClickable();
+        btnAportar.click();
+    }
+
+    public void rellarCamposObligatoriosDeOpcional(String documento, String procedimiento, String fecha, String consejeria, String descripcion) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(),'Adjuntar documento')]")));
+        campoDocumento.sendKeys(documento);
+        campoProcedimiento.sendKeys(procedimiento);
+        campoFecha.sendKeys(fecha);
+        campoConsejeria.sendKeys(consejeria);
+        campoDescripcion.sendKeys(descripcion);
+    }
+
+    public void validarSegundoDocumetoIncorporado() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 80);
+        WebElement btnAutorizado = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//p[contains(text(),'AUTORIZADO')])[2]")));
+
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btnAutorizado);
+
+        WebElement etiqueta = getDriver().findElement(By.xpath("(//section[contains(@class,'vea-row')]//span[contains(@class,'ng-star-inserted')])[3]"));
+        assertEquals("El estado del documento no es correcto", "Incorporado", etiqueta.getText().trim());
+
+        boolean iconoAutorizadoPresente = !getDriver().findElements(By.xpath("(//fa-icon[@alt='faCertificate'])[2]")).isEmpty();
+        assertTrue("El icono de Descargar no está presente", iconoAutorizadoPresente);
+
+        boolean iconoEliminarPresente = !getDriver().findElements(By.xpath("(//fa-icon[@alt='faTrash'])[2]")).isEmpty();
+        assertTrue("El icono de Eliminar no está presente", iconoEliminarPresente);
+
+        int cantidad = Autorizacion.size();
+        assertEquals("Se esperaba exactamente 1 botón AUTORIZACIÓN, pero se encontraron: " + cantidad, 1, cantidad);
     }
 
 
