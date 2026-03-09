@@ -1,9 +1,10 @@
-package org.swfada.PF062.page;
+package org.swfada.PF063.page;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.pages.PageObject;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -11,8 +12,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.nio.file.Paths;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -86,6 +93,16 @@ public class MyPage extends PageObject {
 
     @FindBy(xpath = "//p[contains(text(),'PRESENTAR SOLICITUD')]")
     private WebElementFacade btnPresentar;
+
+    @FindBy(xpath = "//div[@class=\"menuElement menuElementSelected\"]//p")
+    private WebElementFacade btnPerfil;
+
+    @FindBy(xpath = "//button/div[contains(text(),'DESCARGAR')]")
+    private WebElementFacade btnDescargar;
+
+    String relativePath = "src/test/resources/Download/";
+    private final String rutaCarpeta = "src/test/resources/Download/";
+    private String NroRegistro;
 
     public void validarBorrarDelProcedimiento() {
         String proc = Serenity.sessionVariableCalled("PROC");
@@ -186,10 +203,8 @@ public class MyPage extends PageObject {
         String relativePath = "src/test/resources/DOC0234.pdf";
         String absolutePath = Paths.get(relativePath).toAbsolutePath().toString();
 
-        // Localizar el elemento de entrada de archivo
         WebElement fileInput = getDriver().findElement(By.xpath("//input[@name=\"fileupload\"]"));
 
-        // Adjuntar el archivo
         fileInput.sendKeys(absolutePath);
 
         System.out.println("Archivo adjuntado correctamente.");
@@ -297,7 +312,7 @@ public class MyPage extends PageObject {
     }
 
     public void pulsarBotonPresentarSolicitud() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),30);
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'Firmado')]")));
 
         WebElement docFirmado = getDriver().findElement(By.xpath("//div[@class=\"boton-firmado ng-star-inserted\"]/span"));
@@ -307,9 +322,186 @@ public class MyPage extends PageObject {
     }
 
     public void validarSolicitudPresentada() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),60);
+        WebDriverWait wait = new WebDriverWait(getDriver(), 60);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'Justificante')]")));
         WebElement msjPresentación = getDriver().findElement(By.xpath("(//h1)[2]"));
-        assertEquals("Su presentación se ha realizado con éxito", msjPresentación.getText());
+        assertEquals("Su presentación se ha realizado con éxito", msjPresentación.getText().trim());
+
+        By numero = By.xpath("//strong[contains(text(),'Nº de registro:')]/parent::*");
+        WebElement registroElement = wait.until(ExpectedConditions.visibilityOfElementLocated(numero));
+
+        String textoCompleto = registroElement.getText().trim();
+        String numeroRegistro = textoCompleto.replace("Nº de registro:", "").trim();
+        this.NroRegistro = numeroRegistro;
     }
+
+    public void pulsarAreaPrivada() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 60);
+        WebElement areaPrivada = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//p[contains(normalize-space(),'IR AL ÁREA PRIVADA')]")));
+        areaPrivada.click();
+    }
+
+    public void pulsarPestañaPresentaciones() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 160);
+        WebElement presentaciones = wait.until(ExpectedConditions.elementToBeClickable(By.id("presentaciones")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//table[@class='ng-star-inserted'])[2]")));
+
+        By mensajeCarga = By.xpath("//div[contains(@class,'message-table-empty')]");
+        try {
+            // Si aparece, esperamos que desaparezca
+            wait.until(ExpectedConditions.visibilityOfElementLocated(mensajeCarga));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(mensajeCarga));
+        } catch (Exception e) {
+            // Si no aparece, simplemente continuamos
+            System.out.println("El mensaje de carga no apareció, continuando...");
+        }
+    }
+
+    public void validarExpedientePresentado() {
+        By tabla = By.xpath("(//table[@class='ng-star-inserted'])[2]");
+        By filas = By.xpath("(//table[@class='ng-star-inserted'])[2]//tr");
+        By columnaRegistro = By.xpath("(//table[@class='ng-star-inserted'])[2]//tr[2]/td[2]//p");
+
+        WebDriverWait wait = new WebDriverWait(getDriver(), 120);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(tabla));
+
+        wait.until(driver -> driver.findElements(filas).size() > 0);
+
+        WebElement registroTablaElement = wait.until(ExpectedConditions.visibilityOfElementLocated(columnaRegistro));
+
+        String registroTabla = registroTablaElement.getText().trim();
+
+        assertEquals("El número de registro en la tabla no coincide con el generado en la presentación", NroRegistro, registroTabla);
+
+    }
+
+    public void pulsarSobreLaPresentación() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 180);
+        By estadoPresentacion = By.xpath("(//table[@class='ng-star-inserted'])[2]//tr[td[2][contains(normalize-space(),'"+NroRegistro+"')] and td[4]//p[contains(normalize-space(),'Solicitud presentada')]]");
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(estadoPresentacion));
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(estadoPresentacion, "Solicitud presentada"));
+        WebElement presentacion = getDriver().findElement(By.xpath("(//table[@class='ng-star-inserted'])[2]//tr/td[2]//p[contains(normalize-space(),'" + NroRegistro + "')]"));
+        presentacion.click();
+    }
+
+    private void limpiarCarpeta() {
+        File carpeta = new File(rutaCarpeta);
+        if (carpeta.exists() && carpeta.isDirectory()) {
+            File[] archivos = carpeta.listFiles();
+            if (archivos != null) {
+                for (File archivo : archivos) {
+                    if (archivo.isFile()) {
+                        if (!archivo.delete()) {
+                            System.out.println("No se pudo eliminar: " + archivo.getName());
+                        }
+                    }
+                }
+            }
+        } else {
+            System.out.println("La carpeta no existe o no es un directorio válido.");
+        }
+    }
+
+
+    public void pulsarBotónDescargarDeLaPresentación() throws AWTException {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 60);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(),'Procedimiento para prueba de firma con clave')]")));
+
+        limpiarCarpeta();
+        wait.until(ExpectedConditions.elementToBeClickable(btnDescargar));
+        btnDescargar.click();
+
+        Robot robot = new Robot();
+        waitFor(8).second();
+
+        // Paso 1: Obtener la ruta absoluta del archivo a descargar
+        String absolutePath = Paths.get(relativePath + "Presentacion.pdf").toAbsolutePath().toString();
+        StringSelection stringSelection = new StringSelection(absolutePath);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, stringSelection);
+
+        // Paso 2: Pegar la ruta en el cuadro de diálogo de descarga
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        waitFor(4).second();
+
+        // Paso 3: Confirmar la descarga (presionar Enter)
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.delay(20);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+
+        // Paso 4: Verificar si el archivo ya existe y manejar la ventana emergente
+        // manejarArchivoExistente(robot, absolutePath);
+
+        // Paso 5: Confirmar la acción en la ventana emergente (si es necesario)
+        if (!absolutePath.isEmpty()) {
+            robot.keyPress(KeyEvent.VK_TAB);
+            robot.keyRelease(KeyEvent.VK_TAB);
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.delay(20);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+        }
+
+    }
+
+    public void validarNumeroDeExpedienteEnPDF() {
+        File dir = new File(relativePath);
+        String nombreArchivoEsperado = "Presentacion.pdf";
+
+        boolean archivoDescargado = esperarArchivoDescargado(dir, nombreArchivoEsperado, 30);
+        if (!archivoDescargado) {
+            Assertions.fail("ERROR: El archivo Presentacion.pdf no se descargó correctamente.");
+        }
+        File archivoPDF = new File(dir, nombreArchivoEsperado);
+
+        try (PDDocument document = PDDocument.load(archivoPDF)) {
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String textoPDF = pdfStripper.getText(document);
+
+            System.out.println("Contenido del PDF:");
+            System.out.println(textoPDF);
+
+            assertTrue("El número de registro no se encuentra en el PDF.", textoPDF.contains(NroRegistro));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assertions.fail("Error al leer el archivo PDF: " + e.getMessage());
+        }
+
+
+    }
+
+    private boolean esperarArchivoDescargado(File directorio, String nombreArchivo, int tiempoEsperaSegundos) {
+        int tiempoTranscurrido = 0;
+        while (tiempoTranscurrido < tiempoEsperaSegundos) {
+            // Obtener la lista de archivos en el directorio
+            File[] files = directorio.listFiles();
+
+            // Verificar si el archivo esperado está presente
+            if (files != null) {
+                for (File file : files) {
+                    if (file.getName().equals(nombreArchivo)) {
+                        System.out.println("Archivo descargado exitosamente: " + file.getName());
+                        return true; // Archivo encontrado
+                    }
+                }
+            }
+
+            // Esperar 1 segundo antes de volver a verificar
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            tiempoTranscurrido++;
+        }
+
+        System.out.println("El archivo no se descargó dentro del tiempo esperado.");
+        return false; // Archivo no encontrado después del tiempo de espera
+    }
+
 }

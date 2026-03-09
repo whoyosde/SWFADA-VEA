@@ -1,4 +1,4 @@
-package org.swfada.PF062.page;
+package org.swfada.PF068.page;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.annotations.findby.FindBy;
@@ -86,6 +86,27 @@ public class MyPage extends PageObject {
 
     @FindBy(xpath = "//p[contains(text(),'PRESENTAR SOLICITUD')]")
     private WebElementFacade btnPresentar;
+
+    @FindBy(xpath = "(//p[contains(normalize-space(),'PRUEBAS EIDAS CERTIFICADO')])[1]")
+    private WebElementFacade btnPerfil;
+
+    @FindBy(xpath = "(//p[contains(text(),'Cerrar Sesión')])[1]")
+    private WebElementFacade btnCerrarSesion;
+
+    @FindBy(xpath = "//p[contains(text(),'Acceder con mi certificado electrónico')]")
+    private WebElementFacade opcionConCertificado;
+
+    @FindBy(xpath = "//app-search-input//input")
+    private WebElementFacade campoBuscar;
+
+    @FindBy(xpath = "//p[contains(text(),'CONTINUAR BORRADOR')]")
+    private WebElementFacade btnContinuar;
+
+    @FindBy(xpath = "//p[contains(text(),'Lista de borradores')]")
+    private WebElementFacade opcionLista;
+
+    private String NroBorrador;
+
 
     public void validarBorrarDelProcedimiento() {
         String proc = Serenity.sessionVariableCalled("PROC");
@@ -186,10 +207,8 @@ public class MyPage extends PageObject {
         String relativePath = "src/test/resources/DOC0234.pdf";
         String absolutePath = Paths.get(relativePath).toAbsolutePath().toString();
 
-        // Localizar el elemento de entrada de archivo
         WebElement fileInput = getDriver().findElement(By.xpath("//input[@name=\"fileupload\"]"));
 
-        // Adjuntar el archivo
         fileInput.sendKeys(absolutePath);
 
         System.out.println("Archivo adjuntado correctamente.");
@@ -296,20 +315,126 @@ public class MyPage extends PageObject {
         assertEquals("El documento 'Documento anexo' no está firmado", "Firmado", anexoElement.getText().trim());
     }
 
-    public void pulsarBotonPresentarSolicitud() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),30);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'Firmado')]")));
 
-        WebElement docFirmado = getDriver().findElement(By.xpath("//div[@class=\"boton-firmado ng-star-inserted\"]/span"));
-        assertEquals("Firmado", docFirmado.getText());
+    public void obtenerNumeroDelBorrador() {
+        String currentUrl = getDriver().getCurrentUrl();
+        System.out.println("URL actual: " + currentUrl);
+
+        if (!currentUrl.contains("/borrador/")) {
+            throw new IllegalStateException("La URL no contiene el patrón '/borrador/' esperado.");
+        }
+
+        String[] urlParts = currentUrl.split("/");
+        String numeroBorrador = urlParts[urlParts.length - 1];
+        System.out.println("Número de borrador obtenido: " + numeroBorrador);
+        this.NroBorrador = numeroBorrador;
+
+    }
+
+    public void cerrarSesion() {
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", btnPerfil);
+        btnPerfil.click();
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//p[contains(text(),'Cerrar Sesión')])[1]")));
+        btnCerrarSesion.click();
+
+    }
+
+    public void accederAlProcedimiento() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@ng-reflect-router-link=\"/inicio/procedimiento-detalle/\"]//..//p")));
+
+        String proc = Serenity.sessionVariableCalled("PROC");
+        campoBuscar.sendKeys(proc);
+        WebElement enlaceProc=getDriver().findElement(By.xpath("//p[contains(text(),'"+ proc +"')]"));
+        enlaceProc.click();
+    }
+
+    public void pulsarContinuarBorrador() {
+        String proc = Serenity.sessionVariableCalled("PROC");
+        WebDriverWait wait = new WebDriverWait(getDriver(),80);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1[contains(text(),'"+ proc +"')]")));
+        btnContinuar.waitUntilClickable();
+        btnContinuar.click();
+    }
+
+    public void seleccionarListaDeBorradores() {
+        WebDriverWait wait = new WebDriverWait(getDriver(),80);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'Lista de borradores')]")));
+        opcionLista.click();
+    }
+
+    public void autenticacionConCertificadoElectronico() throws AWTException {
+        waitFor(2).second();
+        Robot robot = new Robot();
+
+        Runnable mlauncher = () -> {
+            try {
+                opcionConCertificado.click();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        try {
+            Thread thread = new Thread(mlauncher);
+            thread.start();
+            waitFor(4).second();
+            // Flecha hacia abajo
+            robot.keyPress(KeyEvent.VK_DOWN);
+            robot.keyRelease(KeyEvent.VK_DOWN);
+
+            // Primer TAB
+            robot.keyPress(KeyEvent.VK_TAB);
+            robot.keyRelease(KeyEvent.VK_TAB);
+            // Segundo TAB
+            robot.keyPress(KeyEvent.VK_TAB);
+            robot.keyRelease(KeyEvent.VK_TAB);
+
+            // ENTER
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void accederAlBorrador() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 60);
+
+        By tablaLocator = By.xpath("(//table[@class='ng-star-inserted'])[1]");
+        By filasLocator = By.xpath("(//table[@class='ng-star-inserted'])[1]//tbody/tr");
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(tablaLocator));
+
+        wait.until(driver -> {
+            int rowCount = driver.findElements(filasLocator).size();
+            return rowCount > 0;
+        });
+
+        WebElement borrador = getDriver().findElement(By.xpath("//p[contains(normalize-space(),'" + NroBorrador + "')]"));
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) getDriver();
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", borrador);
+        borrador.click();
+    }
+
+    public void pulsarBotonPresentarSolicitud() {
+        WebDriverWait wait = new WebDriverWait(getDriver(), 30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'PRESENTAR SOLICITUD')]")));
+
         btnPresentar.waitUntilClickable();
         btnPresentar.click();
     }
 
     public void validarSolicitudPresentada() {
-        WebDriverWait wait = new WebDriverWait(getDriver(),60);
+        WebDriverWait wait = new WebDriverWait(getDriver(), 60);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'Justificante')]")));
         WebElement msjPresentación = getDriver().findElement(By.xpath("(//h1)[2]"));
-        assertEquals("Su presentación se ha realizado con éxito", msjPresentación.getText());
+        assertEquals("Su presentación se ha realizado con éxito", msjPresentación.getText().trim());
     }
+
+
 }
